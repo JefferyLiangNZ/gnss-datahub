@@ -20,55 +20,76 @@
 			<!-- ALL SLIDES GO HERE -->
 			<!-- Each section element contains an individual slide -->
 			<section>
-				<h1>Tech briefing </h1>
-				<p>on GNSS datahub project</p>		
+				<h2>Introduction </h2>
+				<h2>to GNSS Datahub</h2>		
 			</section>
 
 			<section>
 				<section id="s1">
-					<h2>AWS EC2 as API Backend</h2>
-					<p>Adopt SPA/Rich content web frontend </p>
-					<p>Support buckets/prefixes listing </p>
-					<p>Support file/directory download as a bundle</p>
-					<p>See 
-					<a href="http://www.htmlcheats.com" class="roll">
-						HTMLCheats.com
-					</a>
-					</p>
+					<h2>AWS EC2 </h2>
+					<h4> API Backend + Single Page Webapp</h4>
+
+					<h4>* List buckets/prefixes </h4>
+					<h4>* Download file/directory (as a bundle)</h4>
+					<span>Note: Bundle JS(files) served from S3 </span>
 				</section>
 
 				<section id="s1.1">
-					<h2>Support S3 standard API</h2>
-					<p>compatible with AWSCli, S3cmd or etc</p>
+					<h2>Support:</h2>
+					<p>compatible with AWSCli, S3cmd (S3 Compatible)</p>
 					<p>Support fast searching in command line</p>
-					<p>See 
-					<a href="http://www.htmlcheats.com" class="roll">
-						HTMLCheats.com
-					</a>
-					</p>
 				</section>			
 			</section>
 
 			<section id="s2">
-				<h2>AWS S3 as Cloud Storage</h2>
-				<p> (Standard, reduced-redunduncy, Glacier)</p>
-				<p>support Versioning (in progress)
-				</p>
+				<section>
+				<h2>AWS S3 </h2><h3>as Cloud Storage, using features:</h3>
+				
+				<h4> </h4>
+				</section>
+				<section>
+				<h2>Support:</h2>								
+				<h4> Standard and RR Storage class</h4>
+					<h4>
+					Object Versioning/tagging
+					</h4>
+					<h4>					
+					Object Lifecycle (auto-delete/archiving)
+					</h4>
+					<h4>
+					Metadata
+					</h4>
+				</section>										
 			</section>
 
 			<section>
 				<section>
-					<h2>AWS ElasticSearch Service </h2>
-					<p>As Direct Index Listing or File Search</p>
-					<p>Normal listing of one prefex take 2~9 seconds, large 'folder' took 10~20 seconds 
+					<h2>Elastic-Search Service </h2>
+					<h4>Used for fast index listing </h4>
+				</section>
+				<section>
+					<h2>Also support:</h2>	
+					<h4>Ad-hoc file Search</h4>
+					<h4>Meta-data search ,Content search</h4>
+
 						<a href="#/show-a-link"> 2</a>
 				</section>
 				<section>
-					<h2>Use Lambda and SQS </h2>
-					<p>Auto updating/maintaining ES index </p>
+					<pre>
+Note: Listing of a standard S3 prefex takes 1~6s, 
+large 'folder' took 10~20s.
+In contrast, ES takes normally less than 100ms 
+and scales well without configuration.
+</pre>
 				</section>				
 			</section>
-
+				<section>
+					<h2>Use Lambda and SQS </h2>
+					<p>Auto updating/maintaining S3 Bucket </p><p>(via ES indexing) </p>
+				</section>
+				<section>
+					<h2>End </h2>
+				</section>					
 			</div>
 	</div>
 	<script src="lib/js/head.min.js"></script>
@@ -76,8 +97,36 @@
 
 	<script>
 		// Required, even if empty.
-		Reveal.initialize({
-		});
+		// Reveal.initialize({
+		// });
+
+			// Full list of configuration options available here:
+			// https://github.com/hakimel/reveal.js#configuration
+			Reveal.initialize({
+				controls: true,
+				progress: true,
+				history: true,
+				center: true,
+
+				theme: Reveal.getQueryHash().theme, // available themes are in /css/theme
+				transition: Reveal.getQueryHash().transition || 'default', // default/cube/page/concave/zoom/linear/fade/none
+
+				// Parallax scrolling
+				// parallaxBackgroundImage: 'https://s3.amazonaws.com/hakim-static/reveal-js/reveal-parallax-1.jpg',
+				// parallaxBackgroundSize: '2100px 900px',
+
+				// Optional libraries used to extend on reveal.js
+				dependencies: [
+					{ src: 'lib/js/classList.js', condition: function() { return !document.body.classList; } },
+					{ src: 'plugin/markdown/marked.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+					{ src: 'plugin/markdown/markdown.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+					{ src: 'plugin/highlight/highlight.js', async: true, callback: function() { hljs.initHighlightingOnLoad(); } },
+					{ src: 'plugin/zoom-js/zoom.js', async: true, condition: function() { return !!document.body.classList; } },
+					{ src: 'plugin/notes/notes.js', async: true, condition: function() { return !!document.body.classList; } }
+				]
+			});
+
+
 	</script>
 </body>
 </html>
