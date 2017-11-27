@@ -1,0 +1,2519 @@
+{
+  "Outputs": {
+    "DbEndpoint": {
+      "Description": "Address of the Db RDS",
+      "Value": {
+        "Fn::Join": [
+          "",
+          [
+            {
+              "Fn::Join": [
+                "",
+                [
+                  "Db",
+                  ".",
+                  "private.lan"
+                ]
+              ]
+            },
+            ":",
+            {
+              "Fn::GetAtt": [
+                "Db",
+                "Endpoint.Port"
+              ]
+            }
+          ]
+        ]
+      }
+    },
+    "GeoServer": {
+      "Description": "URL of the GeoServer ELB",
+      "Value": {
+        "Fn::Join": [
+          "",
+          [
+            "http://",
+            {
+              "Fn::Join": [
+                "",
+                [
+                  {
+                    "Ref": "AWS::StackName"
+                  },
+                  "-",
+                  "GeoServer",
+                  ".",
+                  "geodesy.ga.gov.au."
+                ]
+              ]
+            }
+          ]
+        ]
+      }
+    },
+    "GeoServerAsgCda": {
+      "Description": "Code Deploy Application",
+      "Value": {
+        "Fn::Join": [
+          "",
+          [
+            "https://",
+            {
+              "Ref": "AWS::Region"
+            },
+            ".console.aws.amazon.com/codedeploy/home?region=",
+            {
+              "Ref": "AWS::Region"
+            },
+            "#/applications/",
+            {
+              "Fn::Join": [
+                "",
+                [
+                  {
+                    "Ref": "AWS::StackName"
+                  },
+                  "-",
+                  "GeoServerAsgCda"
+                ]
+              ]
+            }
+          ]
+        ]
+      }
+    },
+    "GeoServerAsgCdg": {
+      "Description": "Code Deploy Deployment Group",
+      "Value": {
+        "Fn::Join": [
+          "",
+          [
+            {
+              "Ref": "AWS::StackName"
+            },
+            "-",
+            "GeoServerAsgCdg"
+          ]
+        ]
+      }
+    },
+    "Jump": {
+      "Description": "URL of the jump host Jump",
+      "Value": {
+        "Fn::Join": [
+          "",
+          [
+            {
+              "Ref": "AWS::StackName"
+            },
+            "-",
+            "Jump",
+            ".",
+            "geodesy.ga.gov.au."
+          ]
+        ]
+      }
+    },
+    "OpenAM": {
+      "Description": "URL of the OpenAM ELB",
+      "Value": {
+        "Fn::Join": [
+          "",
+          [
+            "http://",
+            {
+              "Fn::Join": [
+                "",
+                [
+                  {
+                    "Ref": "AWS::StackName"
+                  },
+                  "-",
+                  "OpenAM",
+                  ".",
+                  "geodesy.ga.gov.au."
+                ]
+              ]
+            }
+          ]
+        ]
+      }
+    },
+    "OpenAMAsgCda": {
+      "Description": "Code Deploy Application",
+      "Value": {
+        "Fn::Join": [
+          "",
+          [
+            "https://",
+            {
+              "Ref": "AWS::Region"
+            },
+            ".console.aws.amazon.com/codedeploy/home?region=",
+            {
+              "Ref": "AWS::Region"
+            },
+            "#/applications/",
+            {
+              "Fn::Join": [
+                "",
+                [
+                  {
+                    "Ref": "AWS::StackName"
+                  },
+                  "-",
+                  "OpenAMAsgCda"
+                ]
+              ]
+            }
+          ]
+        ]
+      }
+    },
+    "OpenAMAsgCdg": {
+      "Description": "Code Deploy Deployment Group",
+      "Value": {
+        "Fn::Join": [
+          "",
+          [
+            {
+              "Ref": "AWS::StackName"
+            },
+            "-",
+            "OpenAMAsgCdg"
+          ]
+        ]
+      }
+    },
+    "WebServices": {
+      "Description": "URL of the WebServices ELB",
+      "Value": {
+        "Fn::Join": [
+          "",
+          [
+            "http://",
+            {
+              "Fn::Join": [
+                "",
+                [
+                  {
+                    "Ref": "AWS::StackName"
+                  },
+                  "-",
+                  "WebServices",
+                  ".",
+                  "geodesy.ga.gov.au."
+                ]
+              ]
+            }
+          ]
+        ]
+      }
+    },
+    "WebServicesAsgCda": {
+      "Description": "Code Deploy Application",
+      "Value": {
+        "Fn::Join": [
+          "",
+          [
+            "https://",
+            {
+              "Ref": "AWS::Region"
+            },
+            ".console.aws.amazon.com/codedeploy/home?region=",
+            {
+              "Ref": "AWS::Region"
+            },
+            "#/applications/",
+            {
+              "Fn::Join": [
+                "",
+                [
+                  {
+                    "Ref": "AWS::StackName"
+                  },
+                  "-",
+                  "WebServicesAsgCda"
+                ]
+              ]
+            }
+          ]
+        ]
+      }
+    },
+    "WebServicesAsgCdg": {
+      "Description": "Code Deploy Deployment Group",
+      "Value": {
+        "Fn::Join": [
+          "",
+          [
+            {
+              "Ref": "AWS::StackName"
+            },
+            "-",
+            "WebServicesAsgCdg"
+          ]
+        ]
+      }
+    }
+  },
+  "Parameters": {
+    "DbMasterPassword": {
+      "Description": "Master password of Db RDS",
+      "NoEcho": true,
+      "Type": "String"
+    },
+    "DbMasterUsername": {
+      "Description": "Master username of Db RDS",
+      "NoEcho": true,
+      "Type": "String"
+    }
+  },
+  "Resources": {
+    "ApSoutheast2aPriRoute": {
+      "DependsOn": "IgAtch",
+      "Properties": {
+        "DestinationCidrBlock": "0.0.0.0/0",
+        "InstanceId": {
+          "Ref": "Nat"
+        },
+        "RouteTableId": {
+          "Ref": "ApSoutheast2aPriRouteTable"
+        }
+      },
+      "Type": "AWS::EC2::Route"
+    },
+    "ApSoutheast2aPriRouteTable": {
+      "Properties": {
+        "Tags": [
+          {
+            "Key": "Name",
+            "Value": {
+              "Fn::Join": [
+                "",
+                [
+                  {
+                    "Ref": "AWS::StackName"
+                  },
+                  "-",
+                  "ApSoutheast2aPriRouteTable"
+                ]
+              ]
+            }
+          }
+        ],
+        "VpcId": {
+          "Ref": "Vpc"
+        }
+      },
+      "Type": "AWS::EC2::RouteTable"
+    },
+    "ApSoutheast2aPriRouteTablePrivateSubnetAAssociation": {
+      "Properties": {
+        "RouteTableId": {
+          "Ref": "ApSoutheast2aPriRouteTable"
+        },
+        "SubnetId": {
+          "Ref": "PrivateSubnetA"
+        }
+      },
+      "Type": "AWS::EC2::SubnetRouteTableAssociation"
+    },
+    "ApSoutheast2bPriRoute": {
+      "DependsOn": "IgAtch",
+      "Properties": {
+        "DestinationCidrBlock": "0.0.0.0/0",
+        "InstanceId": {
+          "Ref": "Nat"
+        },
+        "RouteTableId": {
+          "Ref": "ApSoutheast2bPriRouteTable"
+        }
+      },
+      "Type": "AWS::EC2::Route"
+    },
+    "ApSoutheast2bPriRouteTable": {
+      "Properties": {
+        "Tags": [
+          {
+            "Key": "Name",
+            "Value": {
+              "Fn::Join": [
+                "",
+                [
+                  {
+                    "Ref": "AWS::StackName"
+                  },
+                  "-",
+                  "ApSoutheast2bPriRouteTable"
+                ]
+              ]
+            }
+          }
+        ],
+        "VpcId": {
+          "Ref": "Vpc"
+        }
+      },
+      "Type": "AWS::EC2::RouteTable"
+    },
+    "ApSoutheast2bPriRouteTablePrivateSubnetBAssociation": {
+      "Properties": {
+        "RouteTableId": {
+          "Ref": "ApSoutheast2bPriRouteTable"
+        },
+        "SubnetId": {
+          "Ref": "PrivateSubnetB"
+        }
+      },
+      "Type": "AWS::EC2::SubnetRouteTableAssociation"
+    },
+    "ApSoutheast2cPriRoute": {
+      "DependsOn": "IgAtch",
+      "Properties": {
+        "DestinationCidrBlock": "0.0.0.0/0",
+        "InstanceId": {
+          "Ref": "Nat"
+        },
+        "RouteTableId": {
+          "Ref": "ApSoutheast2cPriRouteTable"
+        }
+      },
+      "Type": "AWS::EC2::Route"
+    },
+    "ApSoutheast2cPriRouteTable": {
+      "Properties": {
+        "Tags": [
+          {
+            "Key": "Name",
+            "Value": {
+              "Fn::Join": [
+                "",
+                [
+                  {
+                    "Ref": "AWS::StackName"
+                  },
+                  "-",
+                  "ApSoutheast2cPriRouteTable"
+                ]
+              ]
+            }
+          }
+        ],
+        "VpcId": {
+          "Ref": "Vpc"
+        }
+      },
+      "Type": "AWS::EC2::RouteTable"
+    },
+    "ApSoutheast2cPriRouteTablePrivateSubnetCAssociation": {
+      "Properties": {
+        "RouteTableId": {
+          "Ref": "ApSoutheast2cPriRouteTable"
+        },
+        "SubnetId": {
+          "Ref": "PrivateSubnetC"
+        }
+      },
+      "Type": "AWS::EC2::SubnetRouteTableAssociation"
+    },
+    "Db": {
+      "Properties": {
+        "AllocatedStorage": 5,
+        "AllowMajorVersionUpgrade": "true",
+        "AutoMinorVersionUpgrade": "true",
+        "DBInstanceClass": "db.t2.small",
+        "DBInstanceIdentifier": {
+          "Fn::Join": [
+            "",
+            [
+              {
+                "Ref": "AWS::StackName"
+              },
+              "Db"
+            ]
+          ]
+        },
+        "DBName": "GeodesyDb",
+        "DBSubnetGroupName": {
+          "Ref": "DbDsg"
+        },
+        "Engine": "postgres",
+        "MasterUserPassword": {
+          "Ref": "DbMasterPassword"
+        },
+        "MasterUsername": {
+          "Ref": "DbMasterUsername"
+        },
+        "MultiAZ": "true",
+        "Port": "5432",
+        "Tags": [
+          {
+            "Key": "Name",
+            "Value": {
+              "Fn::Join": [
+                "",
+                [
+                  {
+                    "Ref": "AWS::StackName"
+                  },
+                  "-",
+                  "Db"
+                ]
+              ]
+            }
+          }
+        ],
+        "VPCSecurityGroups": [
+          {
+            "Ref": "DbSg"
+          }
+        ]
+      },
+      "Type": "AWS::RDS::DBInstance"
+    },
+    "DbDsg": {
+      "Properties": {
+        "DBSubnetGroupDescription": "DbDsg",
+        "SubnetIds": [
+          {
+            "Ref": "PrivateSubnetA"
+          },
+          {
+            "Ref": "PrivateSubnetB"
+          },
+          {
+            "Ref": "PrivateSubnetC"
+          }
+        ],
+        "Tags": [
+          {
+            "Key": "Name",
+            "Value": "DbDsg"
+          }
+        ]
+      },
+      "Type": "AWS::RDS::DBSubnetGroup"
+    },
+    "DbR53": {
+      "Properties": {
+        "HostedZoneId": {
+          "Ref": "privateHostedZone"
+        },
+        "RecordSets": [
+          {
+            "Name": {
+              "Fn::Join": [
+                "",
+                [
+                  "Db",
+                  ".",
+                  "private.lan"
+                ]
+              ]
+            },
+            "ResourceRecords": [
+              {
+                "Fn::GetAtt": [
+                  "Db",
+                  "Endpoint.Address"
+                ]
+              }
+            ],
+            "TTL": 300,
+            "Type": "CNAME"
+          }
+        ]
+      },
+      "Type": "AWS::Route53::RecordSetGroup"
+    },
+    "DbSg": {
+      "Properties": {
+        "GroupDescription": "Security group",
+        "Tags": [
+          {
+            "Key": "Name",
+            "Value": {
+              "Fn::Join": [
+                "",
+                [
+                  {
+                    "Ref": "AWS::StackName"
+                  },
+                  "-",
+                  "DbSg"
+                ]
+              ]
+            }
+          }
+        ],
+        "VpcId": {
+          "Ref": "Vpc"
+        }
+      },
+      "Type": "AWS::EC2::SecurityGroup"
+    },
+    "DbSg5432FromGeoServerAsg5432": {
+      "Properties": {
+        "FromPort": "5432",
+        "GroupId": {
+          "Ref": "DbSg"
+        },
+        "IpProtocol": "tcp",
+        "SourceSecurityGroupId": {
+          "Ref": "GeoServerAsgSg"
+        },
+        "ToPort": "5432"
+      },
+      "Type": "AWS::EC2::SecurityGroupIngress"
+    },
+    "DbSg5432FromWebServicesAsg5432": {
+      "Properties": {
+        "FromPort": "5432",
+        "GroupId": {
+          "Ref": "DbSg"
+        },
+        "IpProtocol": "tcp",
+        "SourceSecurityGroupId": {
+          "Ref": "WebServicesAsgSg"
+        },
+        "ToPort": "5432"
+      },
+      "Type": "AWS::EC2::SecurityGroupIngress"
+    },
+    "GeoServer": {
+      "DependsOn": "Nat",
+      "Properties": {
+        "AccessLoggingPolicy": {
+          "EmitInterval": "60",
+          "Enabled": true,
+          "S3BucketName": "geodesy-elb-bucket",
+          "S3BucketPrefix": {
+            "Fn::Join": [
+              "",
+              [
+                {
+                  "Ref": "AWS::StackName"
+                },
+                "-",
+                "GeoServer"
+              ]
+            ]
+          }
+        },
+        "CrossZone": "true",
+        "HealthCheck": {
+          "HealthyThreshold": 2,
+          "Interval": 60,
+          "Target": "HTTP:8080/geoserver/web/",
+          "Timeout": 30,
+          "UnhealthyThreshold": 2
+        },
+        "Listeners": [
+          {
+            "InstancePort": "8080",
+            "InstanceProtocol": "HTTP",
+            "LoadBalancerPort": "443",
+            "Protocol": "HTTPS",
+            "SSLCertificateId": "arn:aws:acm:ap-southeast-2:094928090547:certificate/07496dcd-6975-4dd4-8986-533488587f0e"
+          }
+        ],
+        "Scheme": "internet-facing",
+        "SecurityGroups": [
+          {
+            "Ref": "GeoServerSg"
+          }
+        ],
+        "Subnets": [
+          {
+            "Ref": "PublicSubnetA"
+          },
+          {
+            "Ref": "PublicSubnetB"
+          },
+          {
+            "Ref": "PublicSubnetC"
+          }
+        ],
+        "Tags": [
+          {
+            "Key": "Name",
+            "Value": "GeoServer"
+          }
+        ]
+      },
+      "Type": "AWS::ElasticLoadBalancing::LoadBalancer"
+    },
+    "GeoServer443FromPublicIp443": {
+      "Properties": {
+        "CidrIp": "0.0.0.0/0",
+        "FromPort": "443",
+        "GroupId": {
+          "Ref": "GeoServerSg"
+        },
+        "IpProtocol": "tcp",
+        "ToPort": "443"
+      },
+      "Type": "AWS::EC2::SecurityGroupIngress"
+    },
+    "GeoServer8080ToGeoServerAsg8080": {
+      "Properties": {
+        "DestinationSecurityGroupId": {
+          "Ref": "GeoServerAsgSg"
+        },
+        "FromPort": "8080",
+        "GroupId": {
+          "Ref": "GeoServerSg"
+        },
+        "IpProtocol": "tcp",
+        "ToPort": "8080"
+      },
+      "Type": "AWS::EC2::SecurityGroupEgress"
+    },
+    "GeoServerAsg": {
+      "DependsOn": "Nat",
+      "Properties": {
+        "AvailabilityZones": [
+          "ap-southeast-2a",
+          "ap-southeast-2b",
+          "ap-southeast-2c"
+        ],
+        "HealthCheckGracePeriod": "300",
+        "HealthCheckType": "ELB",
+        "LaunchConfigurationName": {
+          "Ref": "GeoServerAsgLc"
+        },
+        "LoadBalancerNames": [
+          {
+            "Ref": "GeoServer"
+          }
+        ],
+        "MaxSize": "1",
+        "MinSize": "1",
+        "NotificationConfigurations": [
+          {
+            "NotificationTypes": [
+              "autoscaling:EC2_INSTANCE_LAUNCH",
+              "autoscaling:EC2_INSTANCE_LAUNCH_ERROR",
+              "autoscaling:EC2_INSTANCE_TERMINATE",
+              "autoscaling:EC2_INSTANCE_TERMINATE_ERROR"
+            ],
+            "TopicARN": {
+              "Ref": "SnsTopic"
+            }
+          }
+        ],
+        "Tags": [
+          {
+            "Key": "Name",
+            "PropagateAtLaunch": true,
+            "Value": {
+              "Fn::Join": [
+                "",
+                [
+                  {
+                    "Ref": "AWS::StackName"
+                  },
+                  "-",
+                  "GeoServerAsg"
+                ]
+              ]
+            }
+          }
+        ],
+        "VPCZoneIdentifier": [
+          {
+            "Ref": "PrivateSubnetA"
+          },
+          {
+            "Ref": "PrivateSubnetB"
+          },
+          {
+            "Ref": "PrivateSubnetC"
+          }
+        ]
+      },
+      "Type": "AWS::AutoScaling::AutoScalingGroup",
+      "UpdatePolicy": {
+        "AutoScalingRollingUpdate": {
+          "MinInstancesInService": 0
+        }
+      }
+    },
+    "GeoServerAsg22FromJump22": {
+      "Properties": {
+        "FromPort": "22",
+        "GroupId": {
+          "Ref": "GeoServerAsgSg"
+        },
+        "IpProtocol": "tcp",
+        "SourceSecurityGroupId": {
+          "Ref": "JumpSg"
+        },
+        "ToPort": "22"
+      },
+      "Type": "AWS::EC2::SecurityGroupIngress"
+    },
+    "GeoServerAsg5432ToDbSg5432": {
+      "Properties": {
+        "DestinationSecurityGroupId": {
+          "Ref": "DbSg"
+        },
+        "FromPort": "5432",
+        "GroupId": {
+          "Ref": "GeoServerAsgSg"
+        },
+        "IpProtocol": "tcp",
+        "ToPort": "5432"
+      },
+      "Type": "AWS::EC2::SecurityGroupEgress"
+    },
+    "GeoServerAsg8080FromGeoServer8080": {
+      "Properties": {
+        "FromPort": "8080",
+        "GroupId": {
+          "Ref": "GeoServerAsgSg"
+        },
+        "IpProtocol": "tcp",
+        "SourceSecurityGroupId": {
+          "Ref": "GeoServerSg"
+        },
+        "ToPort": "8080"
+      },
+      "Type": "AWS::EC2::SecurityGroupIngress"
+    },
+    "GeoServerAsgAllToPublicIpAll": {
+      "Properties": {
+        "CidrIp": "0.0.0.0/0",
+        "FromPort": "0",
+        "GroupId": {
+          "Ref": "GeoServerAsgSg"
+        },
+        "IpProtocol": "tcp",
+        "ToPort": "65535"
+      },
+      "Type": "AWS::EC2::SecurityGroupEgress"
+    },
+    "GeoServerAsgCda": {
+      "Properties": {
+        "ApplicationName": {
+          "Fn::Join": [
+            "",
+            [
+              {
+                "Ref": "AWS::StackName"
+              },
+              "-",
+              "GeoServerAsgCda"
+            ]
+          ]
+        }
+      },
+      "Type": "AWS::CodeDeploy::Application"
+    },
+    "GeoServerAsgCdg": {
+      "DependsOn": [
+        "GeoServerAsgCda",
+        "GeoServerAsg"
+      ],
+      "Properties": {
+        "ApplicationName": {
+          "Ref": "GeoServerAsgCda"
+        },
+        "AutoScalingGroups": [
+          {
+            "Ref": "GeoServerAsg"
+          }
+        ],
+        "DeploymentConfigName": "CodeDeployDefault.OneAtATime",
+        "DeploymentGroupName": {
+          "Fn::Join": [
+            "",
+            [
+              {
+                "Ref": "AWS::StackName"
+              },
+              "-",
+              "GeoServerAsgCdg"
+            ]
+          ]
+        },
+        "ServiceRoleArn": "arn:aws:iam::094928090547:role/CodeDeploy"
+      },
+      "Type": "AWS::CodeDeploy::DeploymentGroup"
+    },
+    "GeoServerAsgLc": {
+      "Properties": {
+        "AssociatePublicIpAddress": "false",
+        "BlockDeviceMappings": [],
+        "IamInstanceProfile": "arn:aws:iam::094928090547:instance-profile/GeodesyWebServicesD-WebServerRole",
+        "ImageId": "ami-30586b53",
+        "InstanceMonitoring": "false",
+        "InstanceType": "t2.small",
+        "KeyName": "geodesy",
+        "SecurityGroups": [
+          {
+            "Ref": "GeoServerAsgSg"
+          }
+        ],
+        "UserData": {
+          "Fn::Base64": "#cloud-config\nruncmd:\n - service tomcat8 start\n"
+        }
+      },
+      "Type": "AWS::AutoScaling::LaunchConfiguration"
+    },
+    "GeoServerAsgSchedActOFF": {
+      "Properties": {
+        "AutoScalingGroupName": {
+          "Ref": "GeoServerAsg"
+        },
+        "MaxSize": 0,
+        "MinSize": 0,
+        "Recurrence": "0 09 * * *"
+      },
+      "Type": "AWS::AutoScaling::ScheduledAction"
+    },
+    "GeoServerAsgSchedActON": {
+      "Properties": {
+        "AutoScalingGroupName": {
+          "Ref": "GeoServerAsg"
+        },
+        "MaxSize": "1",
+        "MinSize": "1",
+        "Recurrence": "0 19 * * 0,1,2,3,4"
+      },
+      "Type": "AWS::AutoScaling::ScheduledAction"
+    },
+    "GeoServerAsgSg": {
+      "Properties": {
+        "GroupDescription": "Security group",
+        "Tags": [
+          {
+            "Key": "Name",
+            "Value": {
+              "Fn::Join": [
+                "",
+                [
+                  {
+                    "Ref": "AWS::StackName"
+                  },
+                  "-",
+                  "GeoServerAsgSg"
+                ]
+              ]
+            }
+          }
+        ],
+        "VpcId": {
+          "Ref": "Vpc"
+        }
+      },
+      "Type": "AWS::EC2::SecurityGroup"
+    },
+    "GeoServerR53": {
+      "Properties": {
+        "HostedZoneName": "geodesy.ga.gov.au.",
+        "RecordSets": [
+          {
+            "AliasTarget": {
+              "DNSName": {
+                "Fn::GetAtt": [
+                  "GeoServer",
+                  "DNSName"
+                ]
+              },
+              "HostedZoneId": {
+                "Fn::GetAtt": [
+                  "GeoServer",
+                  "CanonicalHostedZoneNameID"
+                ]
+              }
+            },
+            "Name": {
+              "Fn::Join": [
+                "",
+                [
+                  {
+                    "Ref": "AWS::StackName"
+                  },
+                  "-",
+                  "GeoServer",
+                  ".",
+                  "geodesy.ga.gov.au."
+                ]
+              ]
+            },
+            "Type": "A"
+          }
+        ]
+      },
+      "Type": "AWS::Route53::RecordSetGroup"
+    },
+    "GeoServerSg": {
+      "Properties": {
+        "GroupDescription": "Security group",
+        "Tags": [
+          {
+            "Key": "Name",
+            "Value": {
+              "Fn::Join": [
+                "",
+                [
+                  {
+                    "Ref": "AWS::StackName"
+                  },
+                  "-",
+                  "GeoServerSg"
+                ]
+              ]
+            }
+          }
+        ],
+        "VpcId": {
+          "Ref": "Vpc"
+        }
+      },
+      "Type": "AWS::EC2::SecurityGroup"
+    },
+    "Ig": {
+      "DependsOn": "Vpc",
+      "Properties": {
+        "Tags": [
+          {
+            "Key": "Name",
+            "Value": {
+              "Fn::Join": [
+                "",
+                [
+                  {
+                    "Ref": "AWS::StackName"
+                  },
+                  "-",
+                  "Ig"
+                ]
+              ]
+            }
+          }
+        ]
+      },
+      "Type": "AWS::EC2::InternetGateway"
+    },
+    "IgAtch": {
+      "DependsOn": "Ig",
+      "Properties": {
+        "InternetGatewayId": {
+          "Ref": "Ig"
+        },
+        "VpcId": {
+          "Ref": "Vpc"
+        }
+      },
+      "Type": "AWS::EC2::VPCGatewayAttachment"
+    },
+    "Jump": {
+      "DependsOn": "IgAtch",
+      "Properties": {
+        "IamInstanceProfile": "GeodesyWebServicesD-WebServerRole",
+        "ImageId": "ami-dc361ebf",
+        "InstanceType": "t2.nano",
+        "KeyName": "geodesy",
+        "NetworkInterfaces": [
+          {
+            "AssociatePublicIpAddress": "true",
+            "DeleteOnTermination": "true",
+            "DeviceIndex": "0",
+            "GroupSet": [
+              {
+                "Ref": "JumpSg"
+              }
+            ],
+            "SubnetId": {
+              "Ref": "PublicSubnetA"
+            }
+          }
+        ],
+        "SourceDestCheck": "true",
+        "Tags": [
+          {
+            "Key": "Name",
+            "Value": {
+              "Fn::Join": [
+                "",
+                [
+                  {
+                    "Ref": "AWS::StackName"
+                  },
+                  "-",
+                  "Jump"
+                ]
+              ]
+            }
+          },
+          {
+            "Key": "scheduler:ec2-startstop",
+            "Value": "1900;0900;utc;sun,mon,tue,wed,thu"
+          }
+        ],
+        "UserData": {
+          "Fn::Base64": "#cloud-config\n# Capture all cloud-config output into a more readable logfile\noutput: {all: '| tee -a /var/log/cloud-init-output.log'}\n# update and install packages, reboot if necessary\npackage_upgrade: true\npackage_reboot_if_required: true\npackages:\n - perl-Switch\n - perl-DateTime\n - perl-Sys-Syslog\n - perl-LWP-Protocol-https\n\nwrite_files:\n - path: /etc/awslogs.cfg\n   content: |\n    [general]\n    state_file = /var/awslogs/state/agent-state\n\n    [/var/log/messages]\n    file = /var/log/messages\n    log_group_name = /var/log/messages\n    log_stream_name = {instance_id}\n    datetime_format = %b %d %H:%M:%S\n\nruncmd:\n# cloudwatch monitoring scripts\n - curl -so /tmp/CloudWatchMonitoringScripts-1.2.1.zip http://aws-cloudwatch.s3.amazonaws.com/downloads/CloudWatchMonitoringScripts-1.2.1.zip\n - unzip -d /opt /tmp/CloudWatchMonitoringScripts-1.2.1.zip\n - echo '*/5 * * * * root /opt/aws-scripts-mon/mon-put-instance-data.pl --mem-util --mem-used --mem-avail --disk-space-util --disk-path=/ --from-cron' > /etc/cron.d/cloudwatch\n# cloudwatch logs agent and forwarding config\n - curl https://s3.amazonaws.com/aws-cloudwatch/downloads/latest/awslogs-agent-setup.py -O\n - chmod +x ./awslogs-agent-setup.py\n - ./awslogs-agent-setup.py -n -r ap-southeast-2 -c /etc/awslogs.cfg\n"
+        }
+      },
+      "Type": "AWS::EC2::Instance"
+    },
+    "Jump22FromGA22": {
+      "Properties": {
+        "CidrIp": "192.104.44.129/32",
+        "FromPort": "22",
+        "GroupId": {
+          "Ref": "JumpSg"
+        },
+        "IpProtocol": "tcp",
+        "ToPort": "22"
+      },
+      "Type": "AWS::EC2::SecurityGroupIngress"
+    },
+    "Jump22ToGeoServerAsg22": {
+      "Properties": {
+        "DestinationSecurityGroupId": {
+          "Ref": "GeoServerAsgSg"
+        },
+        "FromPort": "22",
+        "GroupId": {
+          "Ref": "JumpSg"
+        },
+        "IpProtocol": "tcp",
+        "ToPort": "22"
+      },
+      "Type": "AWS::EC2::SecurityGroupEgress"
+    },
+    "Jump22ToOpenAMAsg22": {
+      "Properties": {
+        "DestinationSecurityGroupId": {
+          "Ref": "OpenAMAsgSg"
+        },
+        "FromPort": "22",
+        "GroupId": {
+          "Ref": "JumpSg"
+        },
+        "IpProtocol": "tcp",
+        "ToPort": "22"
+      },
+      "Type": "AWS::EC2::SecurityGroupEgress"
+    },
+    "Jump22ToWebServicesAsg22": {
+      "Properties": {
+        "DestinationSecurityGroupId": {
+          "Ref": "WebServicesAsgSg"
+        },
+        "FromPort": "22",
+        "GroupId": {
+          "Ref": "JumpSg"
+        },
+        "IpProtocol": "tcp",
+        "ToPort": "22"
+      },
+      "Type": "AWS::EC2::SecurityGroupEgress"
+    },
+    "JumpAllToPublicIpAll": {
+      "Properties": {
+        "CidrIp": "0.0.0.0/0",
+        "FromPort": "0",
+        "GroupId": {
+          "Ref": "JumpSg"
+        },
+        "IpProtocol": "tcp",
+        "ToPort": "65535"
+      },
+      "Type": "AWS::EC2::SecurityGroupEgress"
+    },
+    "JumpEIP": {
+      "DependsOn": "IgAtch",
+      "Properties": {
+        "Domain": "vpc",
+        "InstanceId": {
+          "Ref": "Jump"
+        }
+      },
+      "Type": "AWS::EC2::EIP"
+    },
+    "JumpR53": {
+      "DependsOn": "IgAtch",
+      "Properties": {
+        "Comment": "DNS Record for Jump",
+        "HostedZoneName": "geodesy.ga.gov.au.",
+        "Name": {
+          "Fn::Join": [
+            "",
+            [
+              {
+                "Ref": "AWS::StackName"
+              },
+              "-",
+              "Jump",
+              ".",
+              "geodesy.ga.gov.au."
+            ]
+          ]
+        },
+        "ResourceRecords": [
+          {
+            "Ref": "JumpEIP"
+          }
+        ],
+        "TTL": "300",
+        "Type": "A"
+      },
+      "Type": "AWS::Route53::RecordSet"
+    },
+    "JumpSg": {
+      "Properties": {
+        "GroupDescription": "Security group",
+        "Tags": [
+          {
+            "Key": "Name",
+            "Value": {
+              "Fn::Join": [
+                "",
+                [
+                  {
+                    "Ref": "AWS::StackName"
+                  },
+                  "-",
+                  "JumpSg"
+                ]
+              ]
+            }
+          }
+        ],
+        "VpcId": {
+          "Ref": "Vpc"
+        }
+      },
+      "Type": "AWS::EC2::SecurityGroup"
+    },
+    "Nat": {
+      "DependsOn": "IgAtch",
+      "Properties": {
+        "IamInstanceProfile": "GeodesyWebServicesD-WebServerRole",
+        "ImageId": "ami-53371f30",
+        "InstanceType": "t2.nano",
+        "KeyName": "geodesy",
+        "NetworkInterfaces": [
+          {
+            "AssociatePublicIpAddress": "true",
+            "DeleteOnTermination": "true",
+            "DeviceIndex": "0",
+            "GroupSet": [
+              {
+                "Ref": "NatSg"
+              }
+            ],
+            "SubnetId": {
+              "Ref": "PublicSubnetA"
+            }
+          }
+        ],
+        "SourceDestCheck": "false",
+        "Tags": [
+          {
+            "Key": "Name",
+            "Value": {
+              "Fn::Join": [
+                "",
+                [
+                  {
+                    "Ref": "AWS::StackName"
+                  },
+                  "-",
+                  "Nat"
+                ]
+              ]
+            }
+          },
+          {
+            "Key": "scheduler:ec2-startstop",
+            "Value": "1900;0900;utc;sun,mon,tue,wed,thu"
+          }
+        ],
+        "UserData": {
+          "Fn::Base64": "#cloud-config\n# Capture all cloud-config output into a more readable logfile\noutput: {all: '| tee -a /var/log/cloud-init-output.log'}\n# update and install packages, reboot if necessary\npackage_upgrade: true\npackage_reboot_if_required: true\npackages:\n - perl-Switch\n - perl-DateTime\n - perl-Sys-Syslog\n - perl-LWP-Protocol-https\n\nwrite_files:\n - path: /etc/awslogs.cfg\n   content: |\n    [general]\n    state_file = /var/awslogs/state/agent-state\n\n    [/var/log/messages]\n    file = /var/log/messages\n    log_group_name = /var/log/messages\n    log_stream_name = {instance_id}\n    datetime_format = %b %d %H:%M:%S\n\nruncmd:\n# cloudwatch monitoring scripts\n - curl -so /tmp/CloudWatchMonitoringScripts-1.2.1.zip http://aws-cloudwatch.s3.amazonaws.com/downloads/CloudWatchMonitoringScripts-1.2.1.zip\n - unzip -d /opt /tmp/CloudWatchMonitoringScripts-1.2.1.zip\n - echo '*/5 * * * * root /opt/aws-scripts-mon/mon-put-instance-data.pl --mem-util --mem-used --mem-avail --disk-space-util --disk-path=/ --from-cron' > /etc/cron.d/cloudwatch\n# cloudwatch logs agent and forwarding config\n - curl https://s3.amazonaws.com/aws-cloudwatch/downloads/latest/awslogs-agent-setup.py -O\n - chmod +x ./awslogs-agent-setup.py\n - ./awslogs-agent-setup.py -n -r ap-southeast-2 -c /etc/awslogs.cfg\n"
+        }
+      },
+      "Type": "AWS::EC2::Instance"
+    },
+    "NatAllFromVPCAll": {
+      "Properties": {
+        "CidrIp": "10.0.0.0/16",
+        "FromPort": "0",
+        "GroupId": {
+          "Ref": "NatSg"
+        },
+        "IpProtocol": "tcp",
+        "ToPort": "65535"
+      },
+      "Type": "AWS::EC2::SecurityGroupIngress"
+    },
+    "NatAllToPublicIpAll": {
+      "Properties": {
+        "CidrIp": "0.0.0.0/0",
+        "FromPort": "0",
+        "GroupId": {
+          "Ref": "NatSg"
+        },
+        "IpProtocol": "tcp",
+        "ToPort": "65535"
+      },
+      "Type": "AWS::EC2::SecurityGroupEgress"
+    },
+    "NatSg": {
+      "Properties": {
+        "GroupDescription": "Security group",
+        "Tags": [
+          {
+            "Key": "Name",
+            "Value": {
+              "Fn::Join": [
+                "",
+                [
+                  {
+                    "Ref": "AWS::StackName"
+                  },
+                  "-",
+                  "NatSg"
+                ]
+              ]
+            }
+          }
+        ],
+        "VpcId": {
+          "Ref": "Vpc"
+        }
+      },
+      "Type": "AWS::EC2::SecurityGroup"
+    },
+    "NewCorsSiteRequestReceived": {
+      "Properties": {
+        "DisplayName": {
+          "Fn::Join": [
+            "",
+            [
+              {
+                "Ref": "AWS::StackName"
+              },
+              "-",
+              "NewCorsSiteRequestReceived"
+            ]
+          ]
+        },
+        "Subscription": []
+      },
+      "Type": "AWS::SNS::Topic"
+    },
+    "OpenAM": {
+      "DependsOn": "Nat",
+      "Properties": {
+        "AccessLoggingPolicy": {
+          "EmitInterval": "60",
+          "Enabled": true,
+          "S3BucketName": "geodesy-elb-bucket",
+          "S3BucketPrefix": {
+            "Fn::Join": [
+              "",
+              [
+                {
+                  "Ref": "AWS::StackName"
+                },
+                "-",
+                "OpenAM"
+              ]
+            ]
+          }
+        },
+        "CrossZone": "true",
+        "HealthCheck": {
+          "HealthyThreshold": 2,
+          "Interval": 60,
+          "Target": "SSL:8443",
+          "Timeout": 30,
+          "UnhealthyThreshold": 2
+        },
+        "Listeners": [
+          {
+            "InstancePort": "8443",
+            "InstanceProtocol": "SSL",
+            "LoadBalancerPort": "443",
+            "Protocol": "SSL",
+            "SSLCertificateId": "arn:aws:acm:ap-southeast-2:094928090547:certificate/07496dcd-6975-4dd4-8986-533488587f0e"
+          }
+        ],
+        "Scheme": "internet-facing",
+        "SecurityGroups": [
+          {
+            "Ref": "OpenAMSg"
+          }
+        ],
+        "Subnets": [
+          {
+            "Ref": "PublicSubnetA"
+          },
+          {
+            "Ref": "PublicSubnetB"
+          },
+          {
+            "Ref": "PublicSubnetC"
+          }
+        ],
+        "Tags": [
+          {
+            "Key": "Name",
+            "Value": "OpenAM"
+          }
+        ]
+      },
+      "Type": "AWS::ElasticLoadBalancing::LoadBalancer"
+    },
+    "OpenAM443FromPublicIp443": {
+      "Properties": {
+        "CidrIp": "0.0.0.0/0",
+        "FromPort": "443",
+        "GroupId": {
+          "Ref": "OpenAMSg"
+        },
+        "IpProtocol": "tcp",
+        "ToPort": "443"
+      },
+      "Type": "AWS::EC2::SecurityGroupIngress"
+    },
+    "OpenAM8443ToOpenAMAsg8443": {
+      "Properties": {
+        "DestinationSecurityGroupId": {
+          "Ref": "OpenAMAsgSg"
+        },
+        "FromPort": "8443",
+        "GroupId": {
+          "Ref": "OpenAMSg"
+        },
+        "IpProtocol": "tcp",
+        "ToPort": "8443"
+      },
+      "Type": "AWS::EC2::SecurityGroupEgress"
+    },
+    "OpenAMAsg": {
+      "DependsOn": "Nat",
+      "Properties": {
+        "AvailabilityZones": [
+          "ap-southeast-2a",
+          "ap-southeast-2b",
+          "ap-southeast-2c"
+        ],
+        "HealthCheckGracePeriod": "300",
+        "HealthCheckType": "ELB",
+        "LaunchConfigurationName": {
+          "Ref": "OpenAMAsgLc"
+        },
+        "LoadBalancerNames": [
+          {
+            "Ref": "OpenAM"
+          }
+        ],
+        "MaxSize": "1",
+        "MinSize": "1",
+        "NotificationConfigurations": [
+          {
+            "NotificationTypes": [
+              "autoscaling:EC2_INSTANCE_LAUNCH",
+              "autoscaling:EC2_INSTANCE_LAUNCH_ERROR",
+              "autoscaling:EC2_INSTANCE_TERMINATE",
+              "autoscaling:EC2_INSTANCE_TERMINATE_ERROR"
+            ],
+            "TopicARN": {
+              "Ref": "SnsTopic"
+            }
+          }
+        ],
+        "Tags": [
+          {
+            "Key": "Name",
+            "PropagateAtLaunch": true,
+            "Value": {
+              "Fn::Join": [
+                "",
+                [
+                  {
+                    "Ref": "AWS::StackName"
+                  },
+                  "-",
+                  "OpenAMAsg"
+                ]
+              ]
+            }
+          }
+        ],
+        "VPCZoneIdentifier": [
+          {
+            "Ref": "PrivateSubnetA"
+          },
+          {
+            "Ref": "PrivateSubnetB"
+          },
+          {
+            "Ref": "PrivateSubnetC"
+          }
+        ]
+      },
+      "Type": "AWS::AutoScaling::AutoScalingGroup",
+      "UpdatePolicy": {
+        "AutoScalingRollingUpdate": {
+          "MinInstancesInService": 0
+        }
+      }
+    },
+    "OpenAMAsg22FromJump22": {
+      "Properties": {
+        "FromPort": "22",
+        "GroupId": {
+          "Ref": "OpenAMAsgSg"
+        },
+        "IpProtocol": "tcp",
+        "SourceSecurityGroupId": {
+          "Ref": "JumpSg"
+        },
+        "ToPort": "22"
+      },
+      "Type": "AWS::EC2::SecurityGroupIngress"
+    },
+    "OpenAMAsg8443FromOpenAM8443": {
+      "Properties": {
+        "FromPort": "8443",
+        "GroupId": {
+          "Ref": "OpenAMAsgSg"
+        },
+        "IpProtocol": "tcp",
+        "SourceSecurityGroupId": {
+          "Ref": "OpenAMSg"
+        },
+        "ToPort": "8443"
+      },
+      "Type": "AWS::EC2::SecurityGroupIngress"
+    },
+    "OpenAMAsgAllToPublicIpAll": {
+      "Properties": {
+        "CidrIp": "0.0.0.0/0",
+        "FromPort": "0",
+        "GroupId": {
+          "Ref": "OpenAMAsgSg"
+        },
+        "IpProtocol": "tcp",
+        "ToPort": "65535"
+      },
+      "Type": "AWS::EC2::SecurityGroupEgress"
+    },
+    "OpenAMAsgCda": {
+      "Properties": {
+        "ApplicationName": {
+          "Fn::Join": [
+            "",
+            [
+              {
+                "Ref": "AWS::StackName"
+              },
+              "-",
+              "OpenAMAsgCda"
+            ]
+          ]
+        }
+      },
+      "Type": "AWS::CodeDeploy::Application"
+    },
+    "OpenAMAsgCdg": {
+      "DependsOn": [
+        "OpenAMAsgCda",
+        "OpenAMAsg"
+      ],
+      "Properties": {
+        "ApplicationName": {
+          "Ref": "OpenAMAsgCda"
+        },
+        "AutoScalingGroups": [
+          {
+            "Ref": "OpenAMAsg"
+          }
+        ],
+        "DeploymentConfigName": "CodeDeployDefault.OneAtATime",
+        "DeploymentGroupName": {
+          "Fn::Join": [
+            "",
+            [
+              {
+                "Ref": "AWS::StackName"
+              },
+              "-",
+              "OpenAMAsgCdg"
+            ]
+          ]
+        },
+        "ServiceRoleArn": "arn:aws:iam::094928090547:role/CodeDeploy"
+      },
+      "Type": "AWS::CodeDeploy::DeploymentGroup"
+    },
+    "OpenAMAsgLc": {
+      "Properties": {
+        "AssociatePublicIpAddress": "false",
+        "BlockDeviceMappings": [],
+        "IamInstanceProfile": "arn:aws:iam::094928090547:instance-profile/GeodesyWebServicesD-WebServerRole",
+        "ImageId": "ami-ffba5d9d",
+        "InstanceMonitoring": "false",
+        "InstanceType": "t2.small",
+        "KeyName": "geodesy",
+        "SecurityGroups": [
+          {
+            "Ref": "OpenAMAsgSg"
+          }
+        ],
+        "UserData": {
+          "Fn::Base64": "#cloud-config\nrepo_update: true\nrepo_upgrade: all\npackages:\n - httpd\nwrite_files:\n - content: |\n    <html>\n    <body>\n    <h1>Amazonia created this Geodesy stack!</h1>\n    </body>\n    </html>\n   path: /var/www/html/index.html\n   permissions: '0644'\n   owner: root:root\nruncmd:\n - service httpd start\n"
+        }
+      },
+      "Type": "AWS::AutoScaling::LaunchConfiguration"
+    },
+    "OpenAMAsgSchedActOFF": {
+      "Properties": {
+        "AutoScalingGroupName": {
+          "Ref": "OpenAMAsg"
+        },
+        "MaxSize": 0,
+        "MinSize": 0,
+        "Recurrence": "0 09 * * *"
+      },
+      "Type": "AWS::AutoScaling::ScheduledAction"
+    },
+    "OpenAMAsgSchedActON": {
+      "Properties": {
+        "AutoScalingGroupName": {
+          "Ref": "OpenAMAsg"
+        },
+        "MaxSize": "1",
+        "MinSize": "1",
+        "Recurrence": "0 19 * * 0,1,2,3,4"
+      },
+      "Type": "AWS::AutoScaling::ScheduledAction"
+    },
+    "OpenAMAsgSg": {
+      "Properties": {
+        "GroupDescription": "Security group",
+        "Tags": [
+          {
+            "Key": "Name",
+            "Value": {
+              "Fn::Join": [
+                "",
+                [
+                  {
+                    "Ref": "AWS::StackName"
+                  },
+                  "-",
+                  "OpenAMAsgSg"
+                ]
+              ]
+            }
+          }
+        ],
+        "VpcId": {
+          "Ref": "Vpc"
+        }
+      },
+      "Type": "AWS::EC2::SecurityGroup"
+    },
+    "OpenAMR53": {
+      "Properties": {
+        "HostedZoneName": "geodesy.ga.gov.au.",
+        "RecordSets": [
+          {
+            "AliasTarget": {
+              "DNSName": {
+                "Fn::GetAtt": [
+                  "OpenAM",
+                  "DNSName"
+                ]
+              },
+              "HostedZoneId": {
+                "Fn::GetAtt": [
+                  "OpenAM",
+                  "CanonicalHostedZoneNameID"
+                ]
+              }
+            },
+            "Name": {
+              "Fn::Join": [
+                "",
+                [
+                  {
+                    "Ref": "AWS::StackName"
+                  },
+                  "-",
+                  "OpenAM",
+                  ".",
+                  "geodesy.ga.gov.au."
+                ]
+              ]
+            },
+            "Type": "A"
+          }
+        ]
+      },
+      "Type": "AWS::Route53::RecordSetGroup"
+    },
+    "OpenAMSg": {
+      "Properties": {
+        "GroupDescription": "Security group",
+        "Tags": [
+          {
+            "Key": "Name",
+            "Value": {
+              "Fn::Join": [
+                "",
+                [
+                  {
+                    "Ref": "AWS::StackName"
+                  },
+                  "-",
+                  "OpenAMSg"
+                ]
+              ]
+            }
+          }
+        ],
+        "VpcId": {
+          "Ref": "Vpc"
+        }
+      },
+      "Type": "AWS::EC2::SecurityGroup"
+    },
+    "PrivateSubnetA": {
+      "Properties": {
+        "AvailabilityZone": "ap-southeast-2a",
+        "CidrBlock": "10.0.100.0/24",
+        "Tags": [
+          {
+            "Key": "Name",
+            "Value": {
+              "Fn::Join": [
+                "",
+                [
+                  {
+                    "Ref": "AWS::StackName"
+                  },
+                  "-",
+                  "PrivateSubnetA"
+                ]
+              ]
+            }
+          }
+        ],
+        "VpcId": {
+          "Ref": "Vpc"
+        }
+      },
+      "Type": "AWS::EC2::Subnet"
+    },
+    "PrivateSubnetB": {
+      "Properties": {
+        "AvailabilityZone": "ap-southeast-2b",
+        "CidrBlock": "10.0.101.0/24",
+        "Tags": [
+          {
+            "Key": "Name",
+            "Value": {
+              "Fn::Join": [
+                "",
+                [
+                  {
+                    "Ref": "AWS::StackName"
+                  },
+                  "-",
+                  "PrivateSubnetB"
+                ]
+              ]
+            }
+          }
+        ],
+        "VpcId": {
+          "Ref": "Vpc"
+        }
+      },
+      "Type": "AWS::EC2::Subnet"
+    },
+    "PrivateSubnetC": {
+      "Properties": {
+        "AvailabilityZone": "ap-southeast-2c",
+        "CidrBlock": "10.0.102.0/24",
+        "Tags": [
+          {
+            "Key": "Name",
+            "Value": {
+              "Fn::Join": [
+                "",
+                [
+                  {
+                    "Ref": "AWS::StackName"
+                  },
+                  "-",
+                  "PrivateSubnetC"
+                ]
+              ]
+            }
+          }
+        ],
+        "VpcId": {
+          "Ref": "Vpc"
+        }
+      },
+      "Type": "AWS::EC2::Subnet"
+    },
+    "PubRoute": {
+      "DependsOn": "IgAtch",
+      "Properties": {
+        "DestinationCidrBlock": "0.0.0.0/0",
+        "GatewayId": {
+          "Ref": "Ig"
+        },
+        "RouteTableId": {
+          "Ref": "PubRouteTable"
+        }
+      },
+      "Type": "AWS::EC2::Route"
+    },
+    "PubRouteTable": {
+      "Properties": {
+        "Tags": [
+          {
+            "Key": "Name",
+            "Value": {
+              "Fn::Join": [
+                "",
+                [
+                  {
+                    "Ref": "AWS::StackName"
+                  },
+                  "-",
+                  "PubRouteTable"
+                ]
+              ]
+            }
+          }
+        ],
+        "VpcId": {
+          "Ref": "Vpc"
+        }
+      },
+      "Type": "AWS::EC2::RouteTable"
+    },
+    "PubRouteTablePublicSubnetAAssociation": {
+      "Properties": {
+        "RouteTableId": {
+          "Ref": "PubRouteTable"
+        },
+        "SubnetId": {
+          "Ref": "PublicSubnetA"
+        }
+      },
+      "Type": "AWS::EC2::SubnetRouteTableAssociation"
+    },
+    "PubRouteTablePublicSubnetBAssociation": {
+      "Properties": {
+        "RouteTableId": {
+          "Ref": "PubRouteTable"
+        },
+        "SubnetId": {
+          "Ref": "PublicSubnetB"
+        }
+      },
+      "Type": "AWS::EC2::SubnetRouteTableAssociation"
+    },
+    "PubRouteTablePublicSubnetCAssociation": {
+      "Properties": {
+        "RouteTableId": {
+          "Ref": "PubRouteTable"
+        },
+        "SubnetId": {
+          "Ref": "PublicSubnetC"
+        }
+      },
+      "Type": "AWS::EC2::SubnetRouteTableAssociation"
+    },
+    "PublicSubnetA": {
+      "Properties": {
+        "AvailabilityZone": "ap-southeast-2a",
+        "CidrBlock": "10.0.0.0/24",
+        "Tags": [
+          {
+            "Key": "Name",
+            "Value": {
+              "Fn::Join": [
+                "",
+                [
+                  {
+                    "Ref": "AWS::StackName"
+                  },
+                  "-",
+                  "PublicSubnetA"
+                ]
+              ]
+            }
+          }
+        ],
+        "VpcId": {
+          "Ref": "Vpc"
+        }
+      },
+      "Type": "AWS::EC2::Subnet"
+    },
+    "PublicSubnetB": {
+      "Properties": {
+        "AvailabilityZone": "ap-southeast-2b",
+        "CidrBlock": "10.0.1.0/24",
+        "Tags": [
+          {
+            "Key": "Name",
+            "Value": {
+              "Fn::Join": [
+                "",
+                [
+                  {
+                    "Ref": "AWS::StackName"
+                  },
+                  "-",
+                  "PublicSubnetB"
+                ]
+              ]
+            }
+          }
+        ],
+        "VpcId": {
+          "Ref": "Vpc"
+        }
+      },
+      "Type": "AWS::EC2::Subnet"
+    },
+    "PublicSubnetC": {
+      "Properties": {
+        "AvailabilityZone": "ap-southeast-2c",
+        "CidrBlock": "10.0.2.0/24",
+        "Tags": [
+          {
+            "Key": "Name",
+            "Value": {
+              "Fn::Join": [
+                "",
+                [
+                  {
+                    "Ref": "AWS::StackName"
+                  },
+                  "-",
+                  "PublicSubnetC"
+                ]
+              ]
+            }
+          }
+        ],
+        "VpcId": {
+          "Ref": "Vpc"
+        }
+      },
+      "Type": "AWS::EC2::Subnet"
+    },
+    "SiteLogReceived": {
+      "Properties": {
+        "DisplayName": {
+          "Fn::Join": [
+            "",
+            [
+              {
+                "Ref": "AWS::StackName"
+              },
+              "-",
+              "SiteLogReceived"
+            ]
+          ]
+        },
+        "Subscription": []
+      },
+      "Type": "AWS::SNS::Topic"
+    },
+    "SiteLogReceivedTopicPolicy": {
+      "Properties": {
+        "PolicyDocument": {
+          "Id": "__default_policy_ID",
+          "Statement": [
+            {
+              "Action": [
+                "SNS:Publish",
+                "SNS:RemovePermission",
+                "SNS:SetTopicAttributes",
+                "SNS:DeleteTopic",
+                "SNS:ListSubscriptionsByTopic",
+                "SNS:GetTopicAttributes",
+                "SNS:Receive",
+                "SNS:AddPermission",
+                "SNS:Subscribe"
+              ],
+              "Condition": {
+                "StringEquals": {
+                  "AWS:SourceOwner": {
+                    "Ref": "AWS::AccountId"
+                  }
+                }
+              },
+              "Effect": "Allow",
+              "Principal": {
+                "AWS": "*"
+              },
+              "Resource": {
+                "Ref": "SiteLogReceived"
+              },
+              "Sid": "__default_statement_ID"
+            },
+            {
+              "Action": [
+                "SNS:Subscribe",
+                "SNS:ListSubscriptionsByTopic",
+                "SNS:Receive"
+              ],
+              "Effect": "Allow",
+              "Principal": {
+                "AWS": "arn:aws:iam::688660191997:root"
+              },
+              "Resource": {
+                "Ref": "SiteLogReceived"
+              },
+              "Sid": "lambda-access"
+            }
+          ],
+          "Version": "2008-10-17"
+        },
+        "Topics": [
+          {
+            "Ref": "SiteLogReceived"
+          }
+        ]
+      },
+      "Type": "AWS::SNS::TopicPolicy"
+    },
+    "SnsTopic": {
+      "Properties": {
+        "DisplayName": {
+          "Fn::Join": [
+            "",
+            [
+              {
+                "Ref": "AWS::StackName"
+              },
+              "Notifications"
+            ]
+          ]
+        }
+      },
+      "Type": "AWS::SNS::Topic"
+    },
+    "SnsTopicAlarm0": {
+      "DependsOn": "SnsTopic",
+      "Properties": {
+        "AlarmActions": [
+          {
+            "Ref": "SnsTopic"
+          }
+        ],
+        "AlarmDescription": "Alarms when Nat metric CPUUtilization reaches 60",
+        "ComparisonOperator": "GreaterThanOrEqualToThreshold",
+        "Dimensions": [
+          {
+            "Name": "InstanceId",
+            "Value": {
+              "Ref": "Nat"
+            }
+          }
+        ],
+        "EvaluationPeriods": "1",
+        "MetricName": "CPUUtilization",
+        "Namespace": "AWS/EC2",
+        "OKActions": [
+          {
+            "Ref": "SnsTopic"
+          }
+        ],
+        "Period": "300",
+        "Statistic": "Sum",
+        "Threshold": "60"
+      },
+      "Type": "AWS::CloudWatch::Alarm"
+    },
+    "UserRegistrationReceived": {
+      "Properties": {
+        "DisplayName": {
+          "Fn::Join": [
+            "",
+            [
+              {
+                "Ref": "AWS::StackName"
+              },
+              "-",
+              "UserRegistrationReceived"
+            ]
+          ]
+        },
+        "Subscription": []
+      },
+      "Type": "AWS::SNS::Topic"
+    },
+    "Vpc": {
+      "Properties": {
+        "CidrBlock": "10.0.0.0/16",
+        "EnableDnsHostnames": "true",
+        "EnableDnsSupport": "true",
+        "Tags": [
+          {
+            "Key": "Name",
+            "Value": {
+              "Fn::Join": [
+                "",
+                [
+                  {
+                    "Ref": "AWS::StackName"
+                  },
+                  "-",
+                  "Vpc"
+                ]
+              ]
+            }
+          }
+        ]
+      },
+      "Type": "AWS::EC2::VPC"
+    },
+    "WebServices": {
+      "DependsOn": "Nat",
+      "Properties": {
+        "AccessLoggingPolicy": {
+          "EmitInterval": "60",
+          "Enabled": true,
+          "S3BucketName": "geodesy-elb-bucket",
+          "S3BucketPrefix": {
+            "Fn::Join": [
+              "",
+              [
+                {
+                  "Ref": "AWS::StackName"
+                },
+                "-",
+                "WebServices"
+              ]
+            ]
+          }
+        },
+        "CrossZone": "true",
+        "HealthCheck": {
+          "HealthyThreshold": 2,
+          "Interval": 60,
+          "Target": "TCP:8080",
+          "Timeout": 30,
+          "UnhealthyThreshold": 2
+        },
+        "Listeners": [
+          {
+            "InstancePort": "8080",
+            "InstanceProtocol": "HTTP",
+            "LoadBalancerPort": "443",
+            "Protocol": "HTTPS",
+            "SSLCertificateId": "arn:aws:acm:ap-southeast-2:432193813149:certificate/07496dcd-6975-4dd4-8986-533488587f0e"
+          }
+        ],
+        "Scheme": "internet-facing",
+        "SecurityGroups": [
+          {
+            "Ref": "WebServicesSg"
+          }
+        ],
+        "Subnets": [
+          {
+            "Ref": "PublicSubnetA"
+          },
+          {
+            "Ref": "PublicSubnetB"
+          },
+          {
+            "Ref": "PublicSubnetC"
+          }
+        ],
+        "Tags": [
+          {
+            "Key": "Name",
+            "Value": "WebServices"
+          }
+        ]
+      },
+      "Type": "AWS::ElasticLoadBalancing::LoadBalancer"
+    },
+    "WebServices443FromPublicIp443": {
+      "Properties": {
+        "CidrIp": "0.0.0.0/0",
+        "FromPort": "443",
+        "GroupId": {
+          "Ref": "WebServicesSg"
+        },
+        "IpProtocol": "tcp",
+        "ToPort": "443"
+      },
+      "Type": "AWS::EC2::SecurityGroupIngress"
+    },
+    "WebServices8080ToWebServicesAsg8080": {
+      "Properties": {
+        "DestinationSecurityGroupId": {
+          "Ref": "WebServicesAsgSg"
+        },
+        "FromPort": "8080",
+        "GroupId": {
+          "Ref": "WebServicesSg"
+        },
+        "IpProtocol": "tcp",
+        "ToPort": "8080"
+      },
+      "Type": "AWS::EC2::SecurityGroupEgress"
+    },
+    "WebServicesAsg": {
+      "DependsOn": "Nat",
+      "Properties": {
+        "AvailabilityZones": [
+          "ap-southeast-2a",
+          "ap-southeast-2b",
+          "ap-southeast-2c"
+        ],
+        "HealthCheckGracePeriod": "480",
+        "HealthCheckType": "EC2",
+        "LaunchConfigurationName": {
+          "Ref": "WebServicesAsgLc"
+        },
+        "LoadBalancerNames": [
+          {
+            "Ref": "WebServices"
+          }
+        ],
+        "MaxSize": "1",
+        "MinSize": "1",
+        "NotificationConfigurations": [
+          {
+            "NotificationTypes": [
+              "autoscaling:EC2_INSTANCE_LAUNCH",
+              "autoscaling:EC2_INSTANCE_LAUNCH_ERROR",
+              "autoscaling:EC2_INSTANCE_TERMINATE",
+              "autoscaling:EC2_INSTANCE_TERMINATE_ERROR"
+            ],
+            "TopicARN": {
+              "Ref": "SnsTopic"
+            }
+          }
+        ],
+        "Tags": [
+          {
+            "Key": "Name",
+            "PropagateAtLaunch": true,
+            "Value": {
+              "Fn::Join": [
+                "",
+                [
+                  {
+                    "Ref": "AWS::StackName"
+                  },
+                  "-",
+                  "WebServicesAsg"
+                ]
+              ]
+            }
+          }
+        ],
+        "VPCZoneIdentifier": [
+          {
+            "Ref": "PrivateSubnetA"
+          },
+          {
+            "Ref": "PrivateSubnetB"
+          },
+          {
+            "Ref": "PrivateSubnetC"
+          }
+        ]
+      },
+      "Type": "AWS::AutoScaling::AutoScalingGroup",
+      "UpdatePolicy": {
+        "AutoScalingRollingUpdate": {
+          "MinInstancesInService": 0
+        }
+      }
+    },
+    "WebServicesAsg22FromJump22": {
+      "Properties": {
+        "FromPort": "22",
+        "GroupId": {
+          "Ref": "WebServicesAsgSg"
+        },
+        "IpProtocol": "tcp",
+        "SourceSecurityGroupId": {
+          "Ref": "JumpSg"
+        },
+        "ToPort": "22"
+      },
+      "Type": "AWS::EC2::SecurityGroupIngress"
+    },
+    "WebServicesAsg5432ToDbSg5432": {
+      "Properties": {
+        "DestinationSecurityGroupId": {
+          "Ref": "DbSg"
+        },
+        "FromPort": "5432",
+        "GroupId": {
+          "Ref": "WebServicesAsgSg"
+        },
+        "IpProtocol": "tcp",
+        "ToPort": "5432"
+      },
+      "Type": "AWS::EC2::SecurityGroupEgress"
+    },
+    "WebServicesAsg8080FromWebServices8080": {
+      "Properties": {
+        "FromPort": "8080",
+        "GroupId": {
+          "Ref": "WebServicesAsgSg"
+        },
+        "IpProtocol": "tcp",
+        "SourceSecurityGroupId": {
+          "Ref": "WebServicesSg"
+        },
+        "ToPort": "8080"
+      },
+      "Type": "AWS::EC2::SecurityGroupIngress"
+    },
+    "WebServicesAsgAllToPublicIpAll": {
+      "Properties": {
+        "CidrIp": "0.0.0.0/0",
+        "FromPort": "0",
+        "GroupId": {
+          "Ref": "WebServicesAsgSg"
+        },
+        "IpProtocol": "tcp",
+        "ToPort": "65535"
+      },
+      "Type": "AWS::EC2::SecurityGroupEgress"
+    },
+    "WebServicesAsgCda": {
+      "Properties": {
+        "ApplicationName": {
+          "Fn::Join": [
+            "",
+            [
+              {
+                "Ref": "AWS::StackName"
+              },
+              "-",
+              "WebServicesAsgCda"
+            ]
+          ]
+        }
+      },
+      "Type": "AWS::CodeDeploy::Application"
+    },
+    "WebServicesAsgCdg": {
+      "DependsOn": [
+        "WebServicesAsgCda",
+        "WebServicesAsg"
+      ],
+      "Properties": {
+        "ApplicationName": {
+          "Ref": "WebServicesAsgCda"
+        },
+        "AutoScalingGroups": [
+          {
+            "Ref": "WebServicesAsg"
+          }
+        ],
+        "DeploymentConfigName": "CodeDeployDefault.OneAtATime",
+        "DeploymentGroupName": {
+          "Fn::Join": [
+            "",
+            [
+              {
+                "Ref": "AWS::StackName"
+              },
+              "-",
+              "WebServicesAsgCdg"
+            ]
+          ]
+        },
+        "ServiceRoleArn": "arn:aws:iam::094928090547:role/CodeDeploy"
+      },
+      "Type": "AWS::CodeDeploy::DeploymentGroup"
+    },
+    "WebServicesAsgLc": {
+      "Properties": {
+        "AssociatePublicIpAddress": "false",
+        "BlockDeviceMappings": [],
+        "IamInstanceProfile": "arn:aws:iam::094928090547:instance-profile/GeodesyWebServicesD-WebServerRole",
+        "ImageId": "ami-639e6d01",
+        "InstanceMonitoring": "false",
+        "InstanceType": "t2.small",
+        "KeyName": "geodesy",
+        "SecurityGroups": [
+          {
+            "Ref": "WebServicesAsgSg"
+          }
+        ],
+        "UserData": {
+          "Fn::Base64": "#cloud-config\nrepo_update: true\nrepo_upgrade: all\npackages:\n - httpd\nwrite_files:\n - content: |\n    <html>\n    <body>\n    <h1>Amazonia created this Geodesy stack!</h1>\n    </body>\n    </html>\n   path: /var/www/html/index.html\n   permissions: '0644'\n   owner: root:root\nruncmd:\n - service httpd start\n"
+        }
+      },
+      "Type": "AWS::AutoScaling::LaunchConfiguration"
+    },
+    "WebServicesAsgSchedActOFF": {
+      "Properties": {
+        "AutoScalingGroupName": {
+          "Ref": "WebServicesAsg"
+        },
+        "MaxSize": 0,
+        "MinSize": 0,
+        "Recurrence": "0 09 * * *"
+      },
+      "Type": "AWS::AutoScaling::ScheduledAction"
+    },
+    "WebServicesAsgSchedActON": {
+      "Properties": {
+        "AutoScalingGroupName": {
+          "Ref": "WebServicesAsg"
+        },
+        "MaxSize": "1",
+        "MinSize": "1",
+        "Recurrence": "0 19 * * 0,1,2,3,4"
+      },
+      "Type": "AWS::AutoScaling::ScheduledAction"
+    },
+    "WebServicesAsgSg": {
+      "Properties": {
+        "GroupDescription": "Security group",
+        "Tags": [
+          {
+            "Key": "Name",
+            "Value": {
+              "Fn::Join": [
+                "",
+                [
+                  {
+                    "Ref": "AWS::StackName"
+                  },
+                  "-",
+                  "WebServicesAsgSg"
+                ]
+              ]
+            }
+          }
+        ],
+        "VpcId": {
+          "Ref": "Vpc"
+        }
+      },
+      "Type": "AWS::EC2::SecurityGroup"
+    },
+    "WebServicesR53": {
+      "Properties": {
+        "HostedZoneName": "geodesy.ga.gov.au.",
+        "RecordSets": [
+          {
+            "AliasTarget": {
+              "DNSName": {
+                "Fn::GetAtt": [
+                  "WebServices",
+                  "DNSName"
+                ]
+              },
+              "HostedZoneId": {
+                "Fn::GetAtt": [
+                  "WebServices",
+                  "CanonicalHostedZoneNameID"
+                ]
+              }
+            },
+            "Name": {
+              "Fn::Join": [
+                "",
+                [
+                  {
+                    "Ref": "AWS::StackName"
+                  },
+                  "-",
+                  "WebServices",
+                  ".",
+                  "geodesy.ga.gov.au."
+                ]
+              ]
+            },
+            "Type": "A"
+          }
+        ]
+      },
+      "Type": "AWS::Route53::RecordSetGroup"
+    },
+    "WebServicesSg": {
+      "Properties": {
+        "GroupDescription": "Security group",
+        "Tags": [
+          {
+            "Key": "Name",
+            "Value": {
+              "Fn::Join": [
+                "",
+                [
+                  {
+                    "Ref": "AWS::StackName"
+                  },
+                  "-",
+                  "WebServicesSg"
+                ]
+              ]
+            }
+          }
+        ],
+        "VpcId": {
+          "Ref": "Vpc"
+        }
+      },
+      "Type": "AWS::EC2::SecurityGroup"
+    },
+    "privateHostedZone": {
+      "Properties": {
+        "HostedZoneConfig": {
+          "Comment": {
+            "Fn::Join": [
+              "",
+              [
+                "private",
+                " hosted zone created by Amazonia for stack: ",
+                {
+                  "Ref": "AWS::StackName"
+                }
+              ]
+            ]
+          }
+        },
+        "Name": "private.lan",
+        "VPCs": [
+          {
+            "VPCId": {
+              "Ref": "Vpc"
+            },
+            "VPCRegion": {
+              "Ref": "AWS::Region"
+            }
+          }
+        ]
+      },
+      "Type": "AWS::Route53::HostedZone"
+    }
+  }
+}
